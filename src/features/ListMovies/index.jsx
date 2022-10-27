@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useGetBySearchQuery } from "../../api/ApiConfig";
 import { useDispatch, useSelector } from "react-redux";
+import Lottie from "react-lottie";
+import assets from "../../assets";
 
 import {
   selectFavourites,
@@ -12,8 +14,10 @@ import {
   wordingFavour,
   handleSearchAsync,
   setModal,
+  rerender,
 } from "../movieSlice";
 import ModalDetail from "../../components/Modal/Modal";
+import MoviesListData from "./MovieList";
 
 const ListMoviePage = () => {
   const fav = useSelector(allState);
@@ -27,6 +31,8 @@ const ListMoviePage = () => {
     index: null,
     search: "",
     idDetail: "",
+    isStopped: false,
+    isPaused: false,
   });
   console.log("🚀 ~ file: index.jsx ~ line 31 ~ ListMoviePage ~ state", state);
 
@@ -75,33 +81,48 @@ const ListMoviePage = () => {
         idDetail={state.idDetail}
       />
       <Wrapper>
-        <p>This is List movie page</p>
-        <input
-          ref={inputRef}
-          value={state.search}
-          onChange={(e) => handleChange(e.target.value)}
-          onKeyDown={(e) => handleKeyPress(e)}
-        />
+        <div className="title">
+          <p>Movie Database 🍿</p>
+        </div>
+        <div className="latest-search">
+          <input
+            ref={inputRef}
+            value={state.search}
+            onChange={(e) => handleChange(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e)}
+          />
+        </div>
         <div className="latest-search">
           <span>Latest Search :</span>
           {newLatestSearch.map((val, i) => (
-            <span className="badge badge-light" key={i}>
+            <span
+              onClick={() => handleChange(val)}
+              className="badge badge-light"
+              key={i}
+            >
               {val}
             </span>
           ))}
         </div>
-        <div className="wrapper-list">
+        <MoviesListData data={data?.Search} handleModal={handleModal} />
+        {/* <div className="wrapper-list">
           <div className="list">
             {data?.Search?.map((v) => (
               <MovieList>
                 <span onClick={() => handleModal(v?.imdbID)}>{v?.Title}</span>
-                <span onClick={() => dispatch(handleFavourAction(v))}>
-                  {dispatch(wordingFavour(v, data)) ? "Fav" : "Un"}
-                </span>
+                <div onClick={() => dispatch(handleFavourAction(v))}>
+                  <Lottie
+                    options={defaultOptions}
+                    height={50}
+                    width={50}
+                    isPaused={dispatch(wordingFavour(v, data))}
+                    isStopped={dispatch(wordingFavour(v, data))}
+                  />
+                </div>
               </MovieList>
             ))}
           </div>
-        </div>
+        </div> */}
       </Wrapper>
     </div>
   );
@@ -112,11 +133,26 @@ const Wrapper = styled.div`
   flex-direction: column;
   padding: 10vh;
 
+  .title {
+    display: flex;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+  }
+
   .latest-search {
     display: flex;
+    justify-content: center;
     align-items: center;
     margin: 10px 0 0;
     gap: 10px;
+
+    input {
+      width: 50%;
+      border: 2px solid #e9edf4;
+      border-radius: 6px;
+      height: 40px;
+    }
 
     .badge {
       padding: 10px;
@@ -126,6 +162,39 @@ const Wrapper = styled.div`
   .wrapper-list {
     margin-top: 20px;
     width: 100%;
+    // animation-name: slide-in-right;
+    // animation-duration: 4s;
+
+    .slide-in-right {
+      -webkit-animation: slide-in-right 0.5s
+        cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      animation: slide-in-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    @-webkit-keyframes slide-in-right {
+      0% {
+        -webkit-transform: translateX(1000px);
+        transform: translateX(1000px);
+        opacity: 0;
+      }
+      100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes slide-in-right {
+      0% {
+        -webkit-transform: translateX(1000px);
+        transform: translateX(1000px);
+        opacity: 0;
+      }
+      100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
 
     .list {
       display: grid;

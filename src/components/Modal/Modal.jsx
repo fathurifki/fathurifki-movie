@@ -8,15 +8,6 @@ function ModalDetail({ showed = false, setHide, idDetail = "" }) {
   const { data, isLoading, isSuccess } = useGetByDetailQuery({
     imdbId: idDetail,
   });
-  console.log(
-    "🚀 ~ file: Modal.jsx ~ line 10 ~ ModalDetail ~ isLoading",
-    isLoading
-  );
-  console.log(
-    "🚀 ~ file: Modal.jsx ~ line 10 ~ ModalDetail ~ isSuccess",
-    isSuccess
-  );
-  console.log("🚀 ~ file: Modal.jsx ~ line 8 ~ ModalDetail ~ data", data);
 
   return (
     <>
@@ -26,11 +17,6 @@ function ModalDetail({ showed = false, setHide, idDetail = "" }) {
         dialogClassName="my-modal"
         aria-labelledby="example-custom-modal-styling-title"
       >
-        {/* <Modal.Header>
-          <Modal.Title>
-            Detail Movie
-          </Modal.Title>
-        </Modal.Header> */}
         <Modal.Body>
           <Content>
             <img src={data?.Poster} />

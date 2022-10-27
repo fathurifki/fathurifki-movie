@@ -8,6 +8,8 @@ import {
   selectFavourites,
   wordingFavour,
 } from "../movieSlice";
+import Lottie from "react-lottie";
+import assets from "../../assets";
 
 const FavouriteMovies = () => {
   const favourites = useSelector(selectFavourites);
@@ -16,33 +18,47 @@ const FavouriteMovies = () => {
   const dispatch = useDispatch();
 
   const handleUpperCase = (value) => {
-    return value[0].toUpperCase() + value.slice(1);
+    return value && value[0]?.toUpperCase() + value.slice(1);
+  };
+
+  const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: assets.love,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
   return (
-    <Wrapper>
-      <span>Your Favourites</span>
-      <input onChange={(e) => dispatch(searchFavourByName(e.target.value))} />
-      <div className="latest-search"></div>
-      <div className="wrapper-list">
-        <div className="list">
-          {favourites.map((v) => (
-            <Card>
-              <div className="left">
-                <span>{v?.Title}</span>
-                <span>{v?.Year}</span>
-                <span>{handleUpperCase(v?.Type)}</span>
-              </div>
-              <div className="right">
-                <span onClick={() => dispatch(handleFavourAction(v))}>
-                  {dispatch(wordingFavour(v)) ? "Fav" : "Un"}
-                </span>
-              </div>
-            </Card>
-          ))}
+    <div>
+      <Wrapper>
+        <div className="title">
+          <span>Your Favourites 🍿</span>
         </div>
-      </div>
-    </Wrapper>
+        <div className="wrapper-list">
+          <div className="list">
+            {favourites.map((v) => (
+              <Card>
+                <div className="left">
+                  <span>{v?.Title}</span>
+                  <span>{v?.Year}</span>
+                  <span>{handleUpperCase(v?.Type)}</span>
+                </div>
+                <div className="right">
+                  <div onClick={() => dispatch(handleFavourAction(v))}>
+                    <Lottie options={defaultOptions} height={80} width={80} />
+                  </div>
+                  {/* <span onClick={() => dispatch(handleFavourAction(v))}>
+                    {dispatch(wordingFavour(v)) ? "Fav" : "Un"}
+                  </span> */}
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </Wrapper>
+    </div>
   );
 };
 
@@ -54,11 +70,11 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 20px;
 
-  input {
-    width: 50%;
-    border: 2px solid #e9edf4;
-    border-radius: 6px;
-    height: 40px;
+  .title {
+    display: flex;
+    justify-content: flex-start;
+    font-weight: 700;
+    font-size: 24px;
   }
 
   .latest-search {

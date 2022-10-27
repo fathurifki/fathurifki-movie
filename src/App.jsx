@@ -1,5 +1,5 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import styled from "styled-components";
 import "./App.css";
 import ListMoviePage from "./features/ListMovies";
 import FavouriteMovies from "./features/FavouriteMovies";
@@ -23,22 +23,20 @@ function App() {
 
   return (
     <div className="App">
-      <div className="header">
-        <nav className="navbar navbar-light bg-light">
-          <span
-            className="navbar-brand mb-0 h1"
-            onClick={() => handleSelectedPage(DICTIONARY_PAGE.FAVOURITE)}
-          >
-            Navbar
-          </span>
-          <span
-            className="navbar-brand mb-0 h1"
-            onClick={() => handleSelectedPage(DICTIONARY_PAGE.LIST)}
-          >
-            Navbar
-          </span>
-        </nav>
-      </div>
+      <Header>
+        <span
+          className="navbar-brand mb-0 h1"
+          onClick={() => handleSelectedPage(DICTIONARY_PAGE.FAVOURITE)}
+        >
+          Favourites
+        </span>
+        <span
+          className="navbar-brand mb-0 h1"
+          onClick={() => handleSelectedPage(DICTIONARY_PAGE.LIST)}
+        >
+          Movie List
+        </span>
+      </Header>
       <div>
         {state.navigationSelected === DICTIONARY_PAGE.LIST ? (
           <ListMoviePage />
@@ -49,5 +47,12 @@ function App() {
     </div>
   );
 }
+
+const Header = styled.div`
+  display: flex;
+  padding: 4px;
+  margin-left: 100px;
+  margin-right: 100px;
+`;
 
 export default App;

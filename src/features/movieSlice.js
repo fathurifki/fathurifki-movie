@@ -8,8 +8,16 @@ export const movieSlice = createSlice({
     search: "",
     favourSearch: "",
     modalDetail: false,
+    isStoppedLottie: true,
+    isPausedLottie: true,
   },
   reducers: {
+    setLottieStop: (state, action) => {
+      state.isStoppedLottie = action.payload;
+    },
+    setLottiePaused: (state, action) => {
+      state.isPausedLottie = action.payload;
+    },
     setModal: (state, action) => {
       state.modalDetail = !state.modalDetail;
     },
@@ -27,7 +35,7 @@ export const movieSlice = createSlice({
     },
     deleteFavourites: (state, action) => {
       state.favourites = state.favourites.filter(
-        (item) => item.imdbID !== action.payload
+        (item) => item?.imdbID !== action.payload
       );
     },
   },
@@ -39,9 +47,11 @@ export const {
   searchByName,
   searchFavourByName,
   setModal,
+  setLottiePaused,
+  setLottieStop,
 } = movieSlice.actions;
 
-// function for thunk and async logic
+// function for async logic
 
 export const pushFavouritesAsync = (value) => (dispatch, getState) => {
   const { movies } = getState();
@@ -62,8 +72,12 @@ export const handleFavourAction = (value) => (dispatch, getState) => {
   const { movies } = getState();
   if (movies?.favourites?.some((v) => v === value)) {
     dispatch(deleteFavourites(value?.imdbID));
+    dispatch(setLottiePaused(true));
+    dispatch(setLottieStop(true));
   } else {
     dispatch(pushFavouritesAsync(value));
+    dispatch(setLottiePaused(false));
+    dispatch(setLottieStop(false));
   }
 };
 
@@ -74,6 +88,10 @@ export const wordingFavour = (value, data) => (dispatch, getState) => {
   } else {
     return true;
   }
+};
+
+export const rerender = () => {
+  return true;
 };
 
 export const selectFavourites = (state) => state?.movies?.favourites;
