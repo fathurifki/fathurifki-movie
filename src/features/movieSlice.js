@@ -12,8 +12,16 @@ export const movieSlice = createSlice({
     isPausedLottie: true,
     latestData: {},
     page: 1,
+    isAnimate: false,
+    selectedPage: "list",
   },
   reducers: {
+    setSelectedPage: (state, action) => {
+      state.selectedPage = action.payload;
+    },
+    setIsAnimate: (state, action) => {
+      state.isAnimate = action.payload;
+    },
     setLatestData: (state, action) => {
       state.latestData = action.payload;
     },
@@ -67,6 +75,8 @@ export const {
   setPreviousPage,
   setPage,
   setLatestData,
+  setIsAnimate,
+  setSelectedPage,
 } = movieSlice.actions;
 
 // function for async logic
@@ -99,8 +109,6 @@ export const handleFavourAction = (value) => (dispatch, getState) => {
 export const wordingFavour = (value) => (dispatch, getState) => {
   const { movies } = getState();
   if (movies?.favourites?.some((v) => v === value)) {
-    dispatch(setLottiePaused(false));
-    dispatch(setLottieStop(false));
     return false;
   } else {
     return true;

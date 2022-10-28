@@ -12,14 +12,14 @@ function ModalDetail({ showed = false, setHide, idDetail = "" }) {
   return (
     <>
       <Modal
-        show={!isLoading && isSuccess && showed}
+        show={!isLoading && showed}
         onHide={setHide}
         dialogClassName="my-modal"
         aria-labelledby="example-custom-modal-styling-title"
       >
         <Modal.Body>
           <Content>
-            <img src={data?.Poster} />
+            {!isLoading && <img src={data?.Poster} />}
             <div className="title">
               <span>
                 {data?.Title} ({data?.Year})

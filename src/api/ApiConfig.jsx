@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiKey } from "./config";
 
 export const moviesApi = createApi({
   reducerPath: "moviesApi",
@@ -11,7 +12,7 @@ export const moviesApi = createApi({
       query: (arg) => {
         const { search, page } = arg;
         return {
-          url: "?apikey=2d2cc0c3",
+          url: `?apikey=${apiKey}`,
           params: {
             s: search,
             page: page,
@@ -25,7 +26,7 @@ export const moviesApi = createApi({
       query: (arg) => {
         const { imdbId } = arg;
         return {
-          url: "?apikey=2d2cc0c3",
+          url: `?apikey=${apiKey}`,
           params: {
             i: imdbId,
           },

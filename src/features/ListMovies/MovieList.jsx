@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import assets from "../../assets";
 import Lottie from "react-lottie";
-import { useDispatch, useSelector } from "react-redux";
-import { handleFavourAction, wordingFavour } from "../movieSlice";
+import { useDispatch } from "react-redux";
+import { handleFavourAction, setIsAnimate, wordingFavour } from "../movieSlice";
 
 const defaultOptions = {
   loop: false,
@@ -15,57 +15,72 @@ const defaultOptions = {
 };
 
 const MoviesListData = ({ data, handleModal, state, nextPage, prevPage }) => {
-  console.log(
-    "🚀 ~ file: MovieList.jsx ~ line 9 ~ MoviesListData ~ state",
-    state
-  );
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    dispatch(wordingFavour(state?.latestData))
-  }, []);
+  const [stateMovie, setStateMovie] = React.useState({
+    isStopped: false,
+  });
+
+  const handleNextPage = () => {
+    dispatch(nextPage());
+    dispatch(setIsAnimate(false));
+  };
+
+  const handleAdd = (v, data) => {
+    setStateMovie((prev) => ({
+      ...prev,
+      isStopped: !stateMovie.isStopped,
+    }));
+    dispatch(handleFavourAction(v));
+  };
 
   return (
-    <Wrapper>
-      <div className="wrapper-list" animation={true} color="black">
-        <div className="list">
-          {data?.map((v) => (
-            <MovieList>
-              <span onClick={() => handleModal(v?.imdbID)}>{v?.Title}</span>
-              <span onClick={() => dispatch(handleFavourAction(v))}>
-                {dispatch(wordingFavour(v, data)) ? "Fav" : "Un"}
-              </span>
-              <div
-                className="pointer"
-                onClick={() => dispatch(handleFavourAction(v))}
-              >
-                <Lottie
-                  options={defaultOptions}
-                  height={50}
-                  width={50}
-                  isPaused={dispatch(wordingFavour(v, data))}
-                  isStopped={dispatch(wordingFavour(v, data))}
-                />
-              </div>
-            </MovieList>
-          ))}
+    <Wrapper animation={state.isAnimate} color="black">
+      {data?.Response === "True" ? (
+        <div className="wrapper-list">
+          <div className="list">
+            {data?.Search?.map((v, i) => (
+              <MovieList key={i}>
+                <div className="left">
+                  <span onClick={() => handleModal(v?.imdbID)}>{v?.Title}</span>
+                </div>
+                <div className="right">
+                  <div onClick={() => handleAdd(v)}>
+                    <Lottie
+                      options={defaultOptions}
+                      height={50}
+                      width={50}
+                      isPaused={false}
+                      isStopped={dispatch(wordingFavour(v, data))}
+                    />
+                  </div>
+                </div>
+              </MovieList>
+            ))}
+          </div>
+          <div className="pagination">
+            <button
+              disabled={state?.page === 1}
+              onClick={() => dispatch(prevPage())}
+            >
+              Prev
+            </button>
+            <span>{state?.page}</span>
+            <button
+              disabled={data?.length === 0}
+              onClick={() => handleNextPage()}
+            >
+              Next
+            </button>
+          </div>
         </div>
-        <div className="pagination">
-          <button
-            disabled={state?.page === 1}
-            onClick={() => dispatch(prevPage())}
-          >
-            Prev
-          </button>
-          <span>{state?.page}</span>
-          <button
-            disabled={data?.length === 0}
-            onClick={() => dispatch(nextPage())}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      ) : (
+        <>
+          <ErrorText>
+            For some reason, we couldn't load 😓, try another keyword
+          </ErrorText>
+        </>
+      )}
     </Wrapper>
   );
 };
@@ -145,9 +160,28 @@ const MovieList = styled.div`
   -webkit-box-shadow: 0px 6px 17px -4px rgba(0, 0, 0, 0.52);
   -moz-box-shadow: 0px 6px 17px -4px rgba(0, 0, 0, 0.52);
 
-  .pointer {
+  .left {
     cursor: pointer;
   }
+
+  .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+`;
+
+const ErrorText = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  margin-top: 2vh;
+  height: 420px;
+  align-items: center;
 `;
 
 export default MoviesListData;

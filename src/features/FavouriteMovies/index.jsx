@@ -4,10 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   allState,
   handleFavourAction,
-  searchFavourByName,
   selectFavourites,
   setModal,
-  wordingFavour,
 } from "../movieSlice";
 import Lottie from "react-lottie";
 import assets from "../../assets";
@@ -62,24 +60,30 @@ const FavouriteMovies = () => {
         <div className="title">
           <span>Your Favourites 🍿</span>
         </div>
-        <div className="wrapper-list">
-          <div className="list">
-            {favourites.map((v) => (
-              <Card>
-                <div className="left" onClick={() => handleModal(v?.imdbID)}>
-                  <span>{v?.Title}</span>
-                  <span>{v?.Year}</span>
-                  <span>{handleUpperCase(v?.Type)}</span>
-                </div>
-                <div className="right">
-                  <div onClick={() => dispatch(handleFavourAction(v))}>
-                    <Lottie options={defaultOptions} height={80} width={80} />
+        {favourites.length ? (
+          <div className="wrapper-list">
+            <div className="list">
+              {favourites.map((v, i) => (
+                <Card key={i}>
+                  <div className="left" onClick={() => handleModal(v?.imdbID)}>
+                    <span>{v?.Title}</span>
+                    <span>{v?.Year}</span>
+                    <span>{handleUpperCase(v?.Type)}</span>
                   </div>
-                </div>
-              </Card>
-            ))}
+                  <div className="right">
+                    <div onClick={() => dispatch(handleFavourAction(v))}>
+                      <Lottie options={defaultOptions} height={80} width={80}/>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="error-message">
+            <span>Nothing Favourite Here 👋</span>
+          </div>
+        )}
       </Wrapper>
     </div>
   );
@@ -126,6 +130,17 @@ const Wrapper = styled.div`
       grid-column-gap: 6px;
       grid-row-gap: 6px;
     }
+  }
+
+  .error-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 26px;
+    width: 100%;
+    height: 500px;
+    align-items: center;
+    font-weight: 700;
   }
 `;
 

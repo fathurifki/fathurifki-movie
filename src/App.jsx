@@ -1,13 +1,21 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import "./App.css";
 import ListMoviePage from "./features/ListMovies";
 import FavouriteMovies from "./features/FavouriteMovies";
+import { useDispatch, useSelector } from "react-redux";
+import { allState, setSelectedPage } from "./features/movieSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const movie = useSelector(allState);
   const [state, setState] = useState({
     navigationSelected: "list",
   });
+  
+  React.useEffect(() => {
+    dispatch(setSelectedPage(state.navigationSelected));
+  }, [state]);
 
   const DICTIONARY_PAGE = {
     LIST: "list",
