@@ -4,7 +4,7 @@ import { apiKey } from "./config";
 export const moviesApi = createApi({
   reducerPath: "moviesApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://www.omdbapi.com/",
+    baseUrl: "https://www.omdbapi.com/",
   }),
   tagTypes: ["bySearch", "byTitle", "getDetail"],
   endpoints: (builder) => ({
