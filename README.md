@@ -16,4 +16,6 @@ How to run :
     1. git clone git@github.com:fathurifki/fathurifki-movie.git
     2. yarn
     3. yarn dev
+    4. add file .env with VITE_API_KEY=<apikey>
 
+Deployed at Vercel: https://fathurifki-movie.vercel.app/
