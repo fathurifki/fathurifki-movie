@@ -18,4 +18,8 @@ How to run :
     3. yarn dev
     4. add file .env with VITE_API_KEY=<apikey>
 
+Note: 
+Because on Search component using event onKeyDown, make sure after input value, press the Enter button for get the result
+
+
 Deployed at Vercel: https://fathurifki-movie.vercel.app/
