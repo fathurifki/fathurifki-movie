@@ -6,20 +6,21 @@ import {
   handleFavourAction,
   searchFavourByName,
   selectFavourites,
+  setModal,
   wordingFavour,
 } from "../movieSlice";
 import Lottie from "react-lottie";
 import assets from "../../assets";
+import ModalDetail from "../../components/Modal/Modal";
 
 const FavouriteMovies = () => {
   const favourites = useSelector(selectFavourites);
   const movieState = useSelector(allState);
-
   const dispatch = useDispatch();
 
-  const handleUpperCase = (value) => {
-    return value && value[0]?.toUpperCase() + value.slice(1);
-  };
+  const [state, setState] = React.useState({
+    idDetail: "",
+  });
 
   const defaultOptions = {
     loop: false,
@@ -30,8 +31,33 @@ const FavouriteMovies = () => {
     },
   };
 
+  const handleUpperCase = (value) => {
+    return value && value[0]?.toUpperCase() + value.slice(1);
+  };
+
+  const handleModal = (value) => {
+    if (!movieState.modalDetail) {
+      setState((prev) => ({
+        ...prev,
+        idDetail: value,
+      }));
+    } else {
+      setState((prev) => ({
+        ...prev,
+        idDetail: "",
+        delete: false,
+      }));
+    }
+    dispatch(setModal());
+  };
+
   return (
     <div>
+      <ModalDetail
+        showed={movieState.modalDetail}
+        setHide={() => dispatch(setModal())}
+        idDetail={state.idDetail}
+      />
       <Wrapper>
         <div className="title">
           <span>Your Favourites 🍿</span>
@@ -40,7 +66,7 @@ const FavouriteMovies = () => {
           <div className="list">
             {favourites.map((v) => (
               <Card>
-                <div className="left">
+                <div className="left" onClick={() => handleModal(v?.imdbID)}>
                   <span>{v?.Title}</span>
                   <span>{v?.Year}</span>
                   <span>{handleUpperCase(v?.Type)}</span>
@@ -49,9 +75,6 @@ const FavouriteMovies = () => {
                   <div onClick={() => dispatch(handleFavourAction(v))}>
                     <Lottie options={defaultOptions} height={80} width={80} />
                   </div>
-                  {/* <span onClick={() => dispatch(handleFavourAction(v))}>
-                    {dispatch(wordingFavour(v)) ? "Fav" : "Un"}
-                  </span> */}
                 </div>
               </Card>
             ))}

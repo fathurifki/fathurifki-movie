@@ -9,12 +9,12 @@ export const moviesApi = createApi({
   endpoints: (builder) => ({
     getBySearch: builder.query({
       query: (arg) => {
-        const { search } = arg;
+        const { search, page } = arg;
         return {
           url: "?apikey=2d2cc0c3",
           params: {
             s: search,
-            page: 1,
+            page: page,
           },
         };
       },

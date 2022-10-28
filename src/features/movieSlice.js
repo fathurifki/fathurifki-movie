@@ -10,8 +10,22 @@ export const movieSlice = createSlice({
     modalDetail: false,
     isStoppedLottie: true,
     isPausedLottie: true,
+    latestData: {},
+    page: 1,
   },
   reducers: {
+    setLatestData: (state, action) => {
+      state.latestData = action.payload;
+    },
+    setNextPage: (state) => {
+      state.page += 1;
+    },
+    setPreviousPage: (state) => {
+      state.page -= 1;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
     setLottieStop: (state, action) => {
       state.isStoppedLottie = action.payload;
     },
@@ -49,6 +63,10 @@ export const {
   setModal,
   setLottiePaused,
   setLottieStop,
+  setNextPage,
+  setPreviousPage,
+  setPage,
+  setLatestData,
 } = movieSlice.actions;
 
 // function for async logic
@@ -70,20 +88,19 @@ export const handleSearchAsync = (value) => (dispatch, getState) => {
 
 export const handleFavourAction = (value) => (dispatch, getState) => {
   const { movies } = getState();
+  dispatch(setLatestData(value));
   if (movies?.favourites?.some((v) => v === value)) {
     dispatch(deleteFavourites(value?.imdbID));
-    dispatch(setLottiePaused(true));
-    dispatch(setLottieStop(true));
   } else {
     dispatch(pushFavouritesAsync(value));
-    dispatch(setLottiePaused(false));
-    dispatch(setLottieStop(false));
   }
 };
 
-export const wordingFavour = (value, data) => (dispatch, getState) => {
+export const wordingFavour = (value) => (dispatch, getState) => {
   const { movies } = getState();
   if (movies?.favourites?.some((v) => v === value)) {
+    dispatch(setLottiePaused(false));
+    dispatch(setLottieStop(false));
     return false;
   } else {
     return true;

@@ -5,25 +5,40 @@ import Lottie from "react-lottie";
 import { useDispatch, useSelector } from "react-redux";
 import { handleFavourAction, wordingFavour } from "../movieSlice";
 
-const MoviesListData = ({ data, handleModal }) => {
+const defaultOptions = {
+  loop: false,
+  autoplay: false,
+  animationData: assets.love,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+
+const MoviesListData = ({ data, handleModal, state, nextPage, prevPage }) => {
+  console.log(
+    "🚀 ~ file: MovieList.jsx ~ line 9 ~ MoviesListData ~ state",
+    state
+  );
   const dispatch = useDispatch();
-  const defaultOptions = {
-    loop: false,
-    autoplay: false,
-    animationData: assets.love,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+
+  React.useEffect(() => {
+    dispatch(wordingFavour(state?.latestData))
+  }, []);
 
   return (
     <Wrapper>
-      <div className="wrapper-list">
+      <div className="wrapper-list" animation={true} color="black">
         <div className="list">
           {data?.map((v) => (
             <MovieList>
               <span onClick={() => handleModal(v?.imdbID)}>{v?.Title}</span>
-              <div onClick={() => dispatch(handleFavourAction(v))}>
+              <span onClick={() => dispatch(handleFavourAction(v))}>
+                {dispatch(wordingFavour(v, data)) ? "Fav" : "Un"}
+              </span>
+              <div
+                className="pointer"
+                onClick={() => dispatch(handleFavourAction(v))}
+              >
                 <Lottie
                   options={defaultOptions}
                   height={50}
@@ -35,6 +50,21 @@ const MoviesListData = ({ data, handleModal }) => {
             </MovieList>
           ))}
         </div>
+        <div className="pagination">
+          <button
+            disabled={state?.page === 1}
+            onClick={() => dispatch(prevPage())}
+          >
+            Prev
+          </button>
+          <span>{state?.page}</span>
+          <button
+            disabled={data?.length === 0}
+            onClick={() => dispatch(nextPage())}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </Wrapper>
   );
@@ -44,8 +74,8 @@ const Wrapper = styled.div`
   .wrapper-list {
     margin-top: 20px;
     width: 100%;
-    animation-name: slide-in-right;
-    animation-duration: 2s;
+    animation-name: ${(props) => props.animation && `slide-in-right`};
+    animation-duration: ${(props) => props.animation && `2s`};
 
     .slide-in-right {
       -webkit-animation: slide-in-right 0.5s
@@ -85,6 +115,19 @@ const Wrapper = styled.div`
       grid-column-gap: 6px;
       grid-row-gap: 6px;
     }
+
+    .pagination {
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+
+      span {
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
   }
 `;
 
@@ -101,6 +144,10 @@ const MovieList = styled.div`
   box-shadow: 0px 6px 17px -4px rgba(0, 0, 0, 0.52);
   -webkit-box-shadow: 0px 6px 17px -4px rgba(0, 0, 0, 0.52);
   -moz-box-shadow: 0px 6px 17px -4px rgba(0, 0, 0, 0.52);
+
+  .pointer {
+    cursor: pointer;
+  }
 `;
 
 export default MoviesListData;

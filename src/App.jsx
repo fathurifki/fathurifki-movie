@@ -53,6 +53,7 @@ const Header = styled.div`
   padding: 4px;
   margin-left: 100px;
   margin-right: 100px;
+  cursor: pointer;
 `;
 
 export default App;

@@ -15,14 +15,17 @@ import {
   handleSearchAsync,
   setModal,
   rerender,
+  setNextPage,
+  setPreviousPage,
+  setPage,
 } from "../movieSlice";
 import ModalDetail from "../../components/Modal/Modal";
 import MoviesListData from "./MovieList";
 
 const ListMoviePage = () => {
   const fav = useSelector(allState);
-  console.log("🚀 ~ file: index.jsx ~ line 19 ~ ListMoviePage ~ fav", fav);
   const favouriteMovies = useSelector(selectFavourites);
+
   const dispatch = useDispatch();
 
   const inputRef = React.useRef();
@@ -39,7 +42,10 @@ const ListMoviePage = () => {
   const latestSearch = fav?.latestSearch;
   const newLatestSearch = [...new Set(latestSearch)].slice(0, 5);
 
-  const { data } = useGetBySearchQuery({ search: fav?.search });
+  const { data } = useGetBySearchQuery({
+    search: fav?.search,
+    page: fav?.page,
+  });
 
   const handleKeyPress = (event) => {
     if (event.keyCode === 13) {
@@ -48,6 +54,7 @@ const ListMoviePage = () => {
   };
 
   const handleSubmit = () => {
+    dispatch(setPage(1));
     dispatch(handleSearchAsync(inputRef.current.value));
   };
 
@@ -104,7 +111,13 @@ const ListMoviePage = () => {
             </span>
           ))}
         </div>
-        <MoviesListData data={data?.Search} handleModal={handleModal} />
+        <MoviesListData
+          state={fav}
+          data={data?.Search}
+          handleModal={handleModal}
+          nextPage={setNextPage}
+          prevPage={setPreviousPage}
+        />
         {/* <div className="wrapper-list">
           <div className="list">
             {data?.Search?.map((v) => (
@@ -146,6 +159,7 @@ const Wrapper = styled.div`
     align-items: center;
     margin: 10px 0 0;
     gap: 10px;
+    cursor: pointer;
 
     input {
       width: 50%;
