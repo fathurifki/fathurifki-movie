@@ -1,6 +1,3 @@
-https://files.staging.pawonmburi.com/files/learning_staging/image/a3911c54d64a3c8655d7d9455b7dbba7
-
-
 # Movie Database
 
 Techstack
